@@ -2,8 +2,7 @@
 #include "pch.h"
 #include "hooked_functions.h"
 
-#pragma comment (lib, "lib.X86/detours.lib")
-
+#pragma comment (lib, "detours.lib")
 
 // Fix export ordinal #1
 extern "C" __declspec(dllexport)VOID NullExport(VOID)

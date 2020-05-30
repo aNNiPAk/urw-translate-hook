@@ -12,6 +12,12 @@
 #define ATTACH(nameFunc) \
 	DetourAttach(&(PVOID&)(nameFunc##_orig), (PVOID)nameFunc##_hook)
 
+// Исправление возврата у функций
+#define RETR \
+	__asm mov esp, ebp \
+	__asm pop ebp \
+	__asm ret
+
 #define h(nameFunc) nameFunc##_hook
 #define o(nameFunc) nameFunc##_orig
 
