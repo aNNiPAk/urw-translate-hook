@@ -1,8 +1,13 @@
 #include "pch.h"
 #include "hooked_functions.h"
+#include <set>
 
+#include <string>
 // Set address function from urw.exe
 
+std::set<char*> arr;
+
+FILE* fp;
 
 SETUP_ORIG_FUNC(ShowText, 0xF3B30);
 void _fastcall h(ShowText)(int y, int x, char* str, UINT color, int border)
@@ -92,6 +97,34 @@ char* __fastcall h(elaatu)(unsigned __int8* a1, int a2) {
 	return text;
 }
 
+SETUP_ORIG_FUNC(SubstituteValue, 0x1460);
+int __cdecl h(SubstituteValue)(char* buffer, char* format, ...)
+{
+
+	va_list arg;
+	va_start(arg, format);
+	if (!arr.count(format)) {
+		arr.insert(format);
+		fp = fopen("Log/subst.txt", "a");
+		fprintf(fp, "%s\n", format);
+		fclose(fp);
+	}
+	//DictSearch(format);
+	int res = vsprintf(buffer, format, arg);
+	
+	//int res = o(SubstituteValue)(buffer, format, arg);
+	va_end(arg);
+
+	return res;
+}
+
+SETUP_ORIG_FUNC(aseta_luonnonkasvi, 0xE74F0);
+char* __fastcall h(aseta_luonnonkasvi)(char* Str, char* a2)
+{
+	printf("%s, %s\n", Str, a2);
+	return o(aseta_luonnonkasvi)(Str, a2);
+}
+
 void AttachFunctions()
 {
 	ATTACH(ShowText);
@@ -104,4 +137,6 @@ void AttachFunctions()
 	ATTACH(render_drawbutton);
 	ATTACH(LIST_Entry);
 	ATTACH(elaatu);
+	ATTACH(SubstituteValue);
+	ATTACH(aseta_luonnonkasvi);
 }
