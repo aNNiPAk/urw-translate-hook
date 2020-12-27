@@ -6,7 +6,7 @@ map<string, string> dictionary;
 
 void FillDictionary()
 {
-	readData("df_rus.csv", dictionary);
+	readData("urw_rus.csv", dictionary);
 }
 
 BOOL DictSearch(char*& text)
